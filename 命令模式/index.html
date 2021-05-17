@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命令模式</title>
+</head>
+<body>
+    <div class="contain">
+        <button id="button1">刷新菜单目录</button>
+        <button id="button2">增加子菜单</button>
+        <button id="button3">删除子菜单</button>
+    </div>
+</body>
+<script >
+    // 命令模式实现
+        // 1. 定义
+
+        // 用一种松耦合的方式来设计程序，使得请求发送者和请求接收者能够消除彼此之间的耦合关系
+
+        // 命令（command）指的是一个执行某些特定事情的指令
+
+        // 2. 核心
+
+        // 命令中带有execute执行、undo撤销、redo重做等相关命令方法，建议显示地指示这些方法名
+
+        // 3. 实现
+
+        // 简单的命令模式实现可以直接使用对象字面量的形式定义一个命令
+        // 自增
+       
+var b1 = document.getElementById("button1"),
+    b2 = document.getElementById("button2"),
+    b3 = document.getElementById("button3");
+    // 定义setCommand 函数，该函数负责往按钮上面安装命令。点击按钮后会执行command对象的execute()方法。
+    var setCommand = function(button,command){
+        button.onclick = function(){
+            // debugger
+            command();
+        }
+    };
+    var MenuBar = {
+        refersh: function(){
+            alert("刷新菜单目录");
+        }
+    };
+    var SubMenu = {
+        add: function(){
+            alert("增加子菜单");
+        },
+        del: function(){
+            alert("删除子菜单");
+        }
+    };
+
+
+//     // 刷新菜单
+//  var RefreshMenuBarCommand = function(receiver) {
+//     return function(){
+//         receiver.refersh();    
+//     };
+//  };
+//  // 增加菜单
+//  var AddSubMenuCommand = function(receiver) {
+//     return function(){
+//         receiver.add();    
+//     };
+//  };
+//  //删除
+//  var DelSubMenuCommand = function(receiver) {
+//     return function(){
+//         receiver.del();    
+//     };
+//  };
+
+
+
+//  var refershMenuBarCommand = RefreshMenuBarCommand(MenuBar);
+//  var addSubMenuCommand = AddSubMenuCommand(SubMenu);
+//  var delSubMenuCommand = AddSubMenuCommand(SubMenu);
+
+ setCommand(b1,MenuBar.refersh);
+ setCommand(b2,SubMenu.add);
+ setCommand(b3,SubMenu.del);
+</script>
+</html>

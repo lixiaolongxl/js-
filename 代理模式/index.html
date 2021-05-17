@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代理模式</title>
+</head>
+<body>
+    <script>
+        // 1. 定义
+
+        // 为一个对象提供一个代用品或占位符，以便控制对它的访问
+
+        // 2. 核心
+
+        // 当客户不方便直接访问一个 对象或者不满足需要的时候，提供一个替身对象 来控制对这个对象的访问，客户实际上访问的是 替身对象。
+
+        // 替身对象对请求做出一些处理之后， 再把请求转交给本体对象
+
+        // 代理和本体的接口具有一致性，本体定义了关键功能，而代理是提供或拒绝对它的访问，或者在访问本体之前做一 些额外的事情
+
+        // 3. 实现
+        // 它的意图很明显，在访问主体之前进行控制，没有消息的时候直接在代理中返回了，拒绝访问主体，这数据保护代理的形式
+
+        // 有消息的时候对敏感字符进行了处理，这属于虚拟代理的模式
+
+        // 虚拟代理在控制对主体的访问时，加入了一些额外的操作
+        // 代理模式主要有三种：保护代理、虚拟代理、缓存代理
+        // 在滚动事件触发的时候，也许不需要频繁触发，我们可以引入函数节流，这是一种虚拟代理的实现
+        function debounce(fn, delay) {
+            delay = delay || 200;
+            
+            var timer = null;
+
+            return function() {
+                var arg = arguments;
+                
+                // 每次操作时，清除上次的定时器
+                clearTimeout(timer);
+                timer = null;
+                
+                // 定义新的定时器，一段时间后进行操作
+                timer = setTimeout(function() {
+                    fn.apply(this, arg);
+                }, delay);
+            }
+        };
+
+        var count = 0;
+
+        // 主体
+        function scrollHandle() {
+            console.log( ++count); // scroll
+        }
+
+        // 代理
+        var proxyScrollHandle = (function() {
+            return debounce(scrollHandle, 500);
+        })();
+        proxyScrollHandle()
+        // window.onscroll = proxyScrollHandle;
+    </script>
+</body>
+</html>

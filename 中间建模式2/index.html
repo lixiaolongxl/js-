@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中间建模式2</title>
+</head>
+<body>
+    <script>
+        // 采样es6 Promise 语法实现 谁先use 就先执行谁
+        class Ware{
+            constructor(){
+                this.middlewares=[];
+                
+            }
+            use (middleware){
+                this.middlewares.push(middleware)
+                return this
+            }
+            run (state){
+                return this.middlewares.reduce(function(prev, middleware){
+                    return prev.then(() => middleware(state))
+                },Promise.resolve())   
+            }
+        }
+        async function fun1(ctx){
+            ctx.sex = "男"
+            return ctx
+        }
+        async function fun2(ctx){
+            let result = await new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(ctx)
+                    ctx.name = '你好'
+                }, 4000);
+            });
+        }
+        async function fun3(ctx){
+            ctx.age1 = 20
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    ctx.age = 18
+                    resolve(ctx)
+                }, 4000);
+            });
+        }
+        let creator = new Ware();
+        creator.use(fun2);
+        creator.use(fun3);
+        creator.use(fun1);
+        creator.run({}).then(res=>{
+            console.log(res)
+        })
+    </script>
+</body>
+</html>
